@@ -167,26 +167,6 @@ bool match_matches_window(Match *match, i3Window *window) {
         LOG("urgent matches oldest\n");
     }
 
-    if (match->workspace != NULL) {
-        if ((con = con_by_window_id(window->id)) == NULL) {
-            return false;
-        }
-
-        Con *ws = con_get_workspace(con);
-        if (ws == NULL) {
-            return false;
-        }
-
-        if (strcmp(match->workspace->pattern, "__focused__") == 0 &&
-            strcmp(ws->name, con_get_workspace(focused)->name) == 0) {
-            LOG("workspace matches focused workspace\n");
-        } else if (regex_matches(match->workspace, ws->name)) {
-            LOG("workspace matches (%s)\n", ws->name);
-        } else {
-            return false;
-        }
-    }
-
     if (match->dock != M_DONTCHECK) {
         if ((window->dock == W_DOCK_TOP && match->dock == M_DOCK_TOP) ||
             (window->dock == W_DOCK_BOTTOM && match->dock == M_DOCK_BOTTOM) ||

@@ -224,6 +224,22 @@ void cmd_criteria_match_windows(I3_CMD) {
             }
         }
 
+        if (current_match->workspace != NULL) {
+            Con *ws = con_get_workspace(current->con);
+            if (ws == NULL) {
+                continue;
+            }
+
+            if (strcmp(current_match->workspace->pattern, "__focused__") == 0 &&
+                strcmp(ws->name, con_get_workspace(focused)->name) == 0) {
+                LOG("workspace matches focused workspace\n");
+            } else if (regex_matches(current_match->workspace, ws->name)) {
+                LOG("workspace matches (%s)\n", ws->name);
+            } else {
+                continue;
+            }
+        }
+
         if (current->con->window != NULL) {
             if (match_matches_window(current_match, current->con->window)) {
                 DLOG("matches window!\n");
